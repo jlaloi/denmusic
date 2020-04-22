@@ -9,6 +9,7 @@
       const defaultUrl = `ws://${location.hostname}${
         location.port ? ":" + location.port : ""
       }/ws`;
+      const originalTitle = document.title;
 
       let youTubePlayer;
       let socket;
@@ -25,7 +26,7 @@
               youTubePlayer.loadVideoById(videoId);
             }
           };
-          socket.send(`New client!, type "${cmdYT}dQw4w9WgXcQ"`);
+          socket.send(`New client! Type "${cmdYT}dQw4w9WgXcQ"`);
         };
       };
       const send = (event) => {
@@ -54,6 +55,12 @@
           width: "640",
           videoId: "eePl-I8heFc",
           events: {
+            onReady: (event) => {
+              const videoTitle = event.target?.getVideoData()?.title;
+              if (videoTitle)
+                document.title = `${originalTitle} - ${videoTitle}`;
+              else document.title = originalTitle;
+            },
             onStateChange: (event) => {
               // Dirty loop...
               if (event.data == YT.PlayerState.ENDED) youTubePlayer.playVideo();

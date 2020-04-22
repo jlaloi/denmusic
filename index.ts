@@ -63,7 +63,7 @@ const serveWebsocket = async (req: ServerRequest) => {
         if (typeof value === "string") {
           console.log("ws:Text", value);
           // Dispatch to all
-          await Promise.all(
+          await Promise.allSettled(
             Array.from(webSockets.values()).map((webSocket: WebSocket) =>
               webSocket.send(value)
             ),
