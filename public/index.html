@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Deno music</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      const cmdYT = "!yt ";
+      const defaultUrl = `ws://${location.hostname}${
+        location.port ? ":" + location.port : ""
+      }/ws`;
+
+      let youTubePlayer;
+      let socket;
+
+      const wsConnect = (url = defaultUrl) => {
+        socket = new WebSocket(url);
+        socket.onopen = (event) => {
+          socket.onmessage = (event) => {
+            console.log("received", event);
+            const msg = event.data;
+            log(msg);
+            if (msg.startsWith(cmdYT)) {
+              const videoId = msg.substring(cmdYT.length).trim();
+              youTubePlayer.loadVideoById(videoId);
+            }
+          };
+          socket.send(`New client!, type "${cmdYT}dQw4w9WgXcQ"`);
+        };
+      };
+      const send = (event) => {
+        event.preventDefault();
+        const input = document.getElementById("msg");
+        socket.send(input.value);
+        log(input.value, "SENT");
+        input.value = "";
+      };
+      const log = (msg, type = "RECEIVED") => {
+        const textarea = document.getElementById("logs");
+        textarea.innerHTML += `${new Date().toISOString()} - ${type} : ${msg}\n`;
+        textarea.scrollTop = textarea.scrollHeight;
+      };
+
+      const initYt = () => {
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName("script")[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      };
+
+      function onYouTubeIframeAPIReady() {
+        youTubePlayer = new YT.Player("player", {
+          height: "360",
+          width: "640",
+          videoId: "eePl-I8heFc",
+          events: {
+            onStateChange: (event) => {
+              // Dirty loop...
+              if (event.data == YT.PlayerState.ENDED) youTubePlayer.playVideo();
+            },
+          },
+        });
+      }
+
+      const init = () => {
+        wsConnect();
+        initYt();
+      };
+    </script>
+    <style>
+      body,
+      input,
+      textarea {
+        background-color: #333;
+        color: plum;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      textarea {
+        display: block;
+        width: 80em;
+        height: 10em;
+      }
+    </style>
+  </head>
+  <body onload="init()">
+    <form onsubmit="send(event)">
+      <input type="text" placeholder="message" id="msg" required />
+    </form>
+    <textarea placeholder="logs" id="logs"></textarea>
+    <div id="player"></div>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "denomusic",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "author:": "julien.laloi@gmail.com",
+  "scripts": {
+    "start": "deno run --importmap=import_map.json --allow-net --allow-read index.ts"
+  }
+}
