@@ -29,7 +29,6 @@ const serveFile = async (req: ServerRequest) => {
     "content-type",
     CONTENT_TYPES[file.substring(file.lastIndexOf(".") + 1)],
   );
-  console.log(headers, file.lastIndexOf(".") + 1);
   req.respond(
     {
       headers,
