@@ -65,6 +65,7 @@
       const init = () => {
         wsConnect();
         initYt();
+        document.getElementById("msg").focus();
       };
     </script>
     <style>
@@ -74,6 +75,12 @@
         background-color: #333;
         color: plum;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      input,
+      textarea {
+        border: 1px solid white;
+        border-radius: 2px;
+        margin: 0.25em;
       }
       textarea {
         display: block;
