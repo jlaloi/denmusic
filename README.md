@@ -2,7 +2,7 @@
 
 # Denmusic
 
-## Synchronize video playing between clients
+## Synchronize video between clients
 
 ### Running with [Deno](https://deno.land)
 
