@@ -6,6 +6,6 @@
   "author:": "julien.laloi@gmail.com",
   "scripts": {
     "start": "deno run --importmap=import_map.json --allow-net --allow-read index.ts",
-    "expose": "ngrok http 9090"
+    "expose": "ngrok http -host-header=rewrite 9090"
   }
 }

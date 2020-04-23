@@ -6,9 +6,9 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script>
       const cmdYT = "!yt ";
-      const defaultUrl = `ws://${location.hostname}${
-        location.port ? ":" + location.port : ""
-      }/ws`;
+      const defaultUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${
+        location.hostname
+      }${location.port ? ":" + location.port : ""}/ws`;
       const originalTitle = document.title;
 
       let youTubePlayer;
