@@ -86,7 +86,7 @@ const serveWebsocket = async (req: ServerRequest) => {
   }
 };
 
-console.log(`websocket server is running on : http://${address}`);
+console.log(`server is running on : http://${address}`);
 for await (const req of serve(`${address}`)) {
   if (req.url === "/ws") serveWebsocket(req);
   else serveFile(req);
