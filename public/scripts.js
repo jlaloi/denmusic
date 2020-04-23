@@ -1,14 +1,14 @@
-const cmdYT = "!yt ";
-const defaultUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${
-  location.hostname
-}${location.port ? ":" + location.port : ""}/ws`;
+const cmdYT = '!yt ';
+const defaultUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.hostname}${
+  location.port ? ':' + location.port : ''
+}/ws`;
 const originalTitle = document.title;
 
 let youTubePlayer;
 let socket;
 
-const log = (msg, type = "RECEIVED") => {
-  const textarea = document.getElementById("logs");
+const log = (msg, type = 'RECEIVED') => {
+  const textarea = document.getElementById('logs');
   textarea.innerHTML += `${new Date().toISOString()} - ${type} : ${msg}\n`;
   textarea.scrollTop = textarea.scrollHeight;
 };
@@ -19,11 +19,11 @@ const log = (msg, type = "RECEIVED") => {
 const wsConnect = (url = defaultUrl) => {
   socket = new WebSocket(url);
   socket.onopen = () => {
-    log("WS CONNECTED", "INFO");
+    log('WS CONNECTED', 'INFO');
     socket.send(`New client! Type "${cmdYT}dQw4w9WgXcQ"`);
   };
   socket.onmessage = (event) => {
-    console.log("received", event);
+    console.log('received', event);
     const msg = event.data;
     log(msg);
     if (msg.startsWith(cmdYT)) {
@@ -32,39 +32,39 @@ const wsConnect = (url = defaultUrl) => {
     }
   };
   socket.onclose = ({ code }) => wsReconnectOnError(`WS CLOSED : ${code}`);
-  socket.onerror = () => wsReconnectOnError("error");
+  socket.onerror = () => wsReconnectOnError('error');
 };
 let errorTimeout;
 const wsReconnectOnError = (error, delay = 5000) => {
   console.error(error);
-  log(error, "ERROR");
-  log(`Attempting to reconnect in ${delay / 1000}s...`, "INFO");
+  log(error, 'ERROR');
+  log(`Attempting to reconnect in ${delay / 1000}s...`, 'INFO');
   if (errorTimeout) clearTimeout(errorTimeout); // Cancel previous
   errorTimeout = setTimeout(wsConnect, delay);
 };
 const send = (event) => {
   event.preventDefault();
-  const input = document.getElementById("msg");
+  const input = document.getElementById('msg');
   socket.send(input.value);
-  log(input.value, "SENT");
-  input.value = "";
+  log(input.value, 'SENT');
+  input.value = '';
 };
 
 /*
  * Youtube
  */
 const initYt = () => {
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  const firstScriptTag = document.getElementsByTagName("script")[0];
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  const firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 };
 
 function onYouTubeIframeAPIReady() {
-  youTubePlayer = new YT.Player("player", {
-    height: "360",
-    width: "640",
-    videoId: "eePl-I8heFc",
+  youTubePlayer = new YT.Player('player', {
+    height: '360',
+    width: '640',
+    videoId: 'eePl-I8heFc',
     events: {
       onReady: (event) => {
         const videoTitle = event.target?.getVideoData()?.title;
@@ -85,5 +85,5 @@ function onYouTubeIframeAPIReady() {
 const init = () => {
   wsConnect();
   initYt();
-  document.getElementById("msg").focus();
+  document.getElementById('msg').focus();
 };
