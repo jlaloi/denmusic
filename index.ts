@@ -6,17 +6,18 @@ import {
 } from "ws/mod.ts";
 import { exists } from "fs/exists.ts";
 import { basename, extname, join } from "path/mod.ts";
+import { v4 as uuid } from "uuid/mod.ts";
 
 const port = Deno.args[0] || "9090";
 const dirPublic = "./public/";
 const webSockets = new Map();
 
 const CONTENT_TYPES: Record<string, string> = {
-  "css": "text/css",
-  "html": "text/html",
-  "js": "application/javascript",
-  "png": "image/png",
-  "svg": "image/svg+xml",
+  ".css": "text/css",
+  ".html": "text/html",
+  ".js": "application/javascript",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
 };
 
 const serveFile = async (req: ServerRequest) => {
@@ -25,9 +26,12 @@ const serveFile = async (req: ServerRequest) => {
   const fileExist = await exists(file);
   if (!fileExist) return req.respond({ status: 404 });
   console.log("serving", fileName);
-  const body = await Deno.open(file, "r");
+  const [body, fileInfo] = await Promise.all(
+    [Deno.open(file, "r"), Deno.stat(file)],
+  );
   const headers = new Headers();
-  headers.set("content-type", CONTENT_TYPES[extname(file).substring(1)]);
+  headers.set("content-length", fileInfo.size.toString());
+  headers.set("content-type", CONTENT_TYPES[extname(file)]);
   req.respond(
     {
       headers,
@@ -37,6 +41,7 @@ const serveFile = async (req: ServerRequest) => {
 };
 
 const serveWebsocket = async (req: ServerRequest) => {
+  const websocketId = uuid.generate();
   const { headers, conn } = req;
   try {
     const webSocket = await acceptWebSocket({
@@ -45,8 +50,6 @@ const serveWebsocket = async (req: ServerRequest) => {
       bufReader: req.r,
       bufWriter: req.w,
     });
-    // To improve
-    const websocketId = new Date().getTime();
     webSockets.set(websocketId, webSocket);
     console.log("ws:New, total", webSockets.size);
     const it = webSocket.receive();
@@ -66,14 +69,13 @@ const serveWebsocket = async (req: ServerRequest) => {
           );
         }
       } catch (e) {
-        webSockets.delete(websocketId);
-        console.error(`ws:Error: ${e}`);
         await webSocket.close(1000).catch(console.error);
-        break;
+        throw e;
       }
     }
   } catch (err) {
-    console.error(`failed to accept websocket: ${err}`);
+    webSockets.delete(websocketId);
+    console.error(`websocket error: ${err}`);
   }
 };
 

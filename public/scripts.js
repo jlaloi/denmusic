@@ -23,10 +23,9 @@ const wsConnect = (url = defaultUrl) => {
     socket.send(`New client! Type "${cmdYT}dQw4w9WgXcQ"`);
   };
   socket.onmessage = (event) => {
-    console.log('received', event);
     const msg = event.data;
     log(msg);
-    if (msg.startsWith(cmdYT)) {
+    if (msg && msg.startsWith(cmdYT)) {
       const videoId = msg.substring(cmdYT.length).trim();
       youTubePlayer.loadVideoById(videoId);
     }
@@ -36,9 +35,7 @@ const wsConnect = (url = defaultUrl) => {
 };
 let errorTimeout;
 const wsReconnectOnError = (error, delay = 5000) => {
-  console.error(error);
-  log(error, 'ERROR');
-  log(`Attempting to reconnect in ${delay / 1000}s...`, 'INFO');
+  log(`Attempting to reconnect in ${delay / 1000}s...`, 'ERROR');
   if (errorTimeout) clearTimeout(errorTimeout); // Cancel previous
   errorTimeout = setTimeout(wsConnect, delay);
 };
@@ -59,21 +56,18 @@ const initYt = () => {
   const firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 };
-
 function onYouTubeIframeAPIReady() {
   youTubePlayer = new YT.Player('player', {
     height: '360',
     width: '640',
     videoId: 'eePl-I8heFc',
     events: {
-      onReady: (event) => {
-        const videoTitle = event.target?.getVideoData()?.title;
-        if (videoTitle) document.title = `${originalTitle} - ${videoTitle}`;
-        else document.title = originalTitle;
-      },
       onStateChange: (event) => {
-        // Dirty loop...
-        if (event.data == YT.PlayerState.ENDED) youTubePlayer.playVideo();
+        if (event.data === YT.PlayerState.PLAYING) {
+          const videoTitle = event.target?.getVideoData()?.title;
+          if (videoTitle) document.title = `${originalTitle} - ${videoTitle}`;
+          else document.title = originalTitle;
+        } else if (event.data === YT.PlayerState.ENDED) event.target.playVideo(); // Dirty loop...
       },
     },
   });
