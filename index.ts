@@ -13,6 +13,7 @@ const webSockets = new Map();
 
 const CONTENT_TYPES: Record<string, string> = {
   "html": "text/html",
+  "png": "image/png",
   "svg": "image/svg+xml",
 };
 
