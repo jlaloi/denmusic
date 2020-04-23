@@ -18,18 +18,29 @@ const log = (msg, type = "RECEIVED") => {
  */
 const wsConnect = (url = defaultUrl) => {
   socket = new WebSocket(url);
-  socket.onopen = (event) => {
-    socket.onmessage = (event) => {
-      console.log("received", event);
-      const msg = event.data;
-      log(msg);
-      if (msg.startsWith(cmdYT)) {
-        const videoId = msg.substring(cmdYT.length).trim();
-        youTubePlayer.loadVideoById(videoId);
-      }
-    };
+  socket.onopen = () => {
+    log("WS CONNECTED", "INFO");
     socket.send(`New client! Type "${cmdYT}dQw4w9WgXcQ"`);
   };
+  socket.onmessage = (event) => {
+    console.log("received", event);
+    const msg = event.data;
+    log(msg);
+    if (msg.startsWith(cmdYT)) {
+      const videoId = msg.substring(cmdYT.length).trim();
+      youTubePlayer.loadVideoById(videoId);
+    }
+  };
+  socket.onclose = ({ code }) => wsReconnectOnError(`WS CLOSED : ${code}`);
+  socket.onerror = () => wsReconnectOnError("error");
+};
+let errorTimeout;
+const wsReconnectOnError = (error, delay = 5000) => {
+  console.error(error);
+  log(error, "ERROR");
+  log(`Attempting to reconnect in ${delay / 1000}s...`, "INFO");
+  if (errorTimeout) clearTimeout(errorTimeout); // Cancel previous
+  errorTimeout = setTimeout(wsConnect, delay);
 };
 const send = (event) => {
   event.preventDefault();
