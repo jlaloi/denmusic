@@ -1,0 +1,25 @@
+body {
+  height: 100%;
+  text-align: center;
+}
+body,
+input,
+textarea {
+  background-color: #333;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: plum;
+}
+input,
+textarea {
+  border: 1px solid #555;
+  border-radius: 2px;
+  padding: 0.25em;
+  width: 80%;
+  margin: 0.25em auto;
+  font-size: 0.8em;
+}
+textarea {
+  display: block;
+  height: 10em;
+  font-style: italic;
+}

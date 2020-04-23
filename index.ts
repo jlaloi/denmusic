@@ -12,7 +12,9 @@ const dirPublic = "./public/";
 const webSockets = new Map();
 
 const CONTENT_TYPES: Record<string, string> = {
+  "css": "text/css",
   "html": "text/html",
+  "js": "application/javascript",
   "png": "image/png",
   "svg": "image/svg+xml",
 };
