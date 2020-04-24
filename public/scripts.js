@@ -42,7 +42,7 @@ const wsReconnectOnError = (error, delay = 5000) => {
 const send = (event) => {
   event.preventDefault();
   const input = document.getElementById('msg');
-  socket.send(input.value);
+  socket.send(input.value.trim());
   log(input.value, 'SENT');
   input.value = '';
   onUserAction();
