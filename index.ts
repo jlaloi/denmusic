@@ -42,13 +42,13 @@ const serveFile = async (req: ServerRequest) => {
 
 const serveWebsocket = async (req: ServerRequest) => {
   const websocketId = uuid.generate();
-  const { headers, conn } = req;
+  const { conn, headers, r:bufReader, w:bufWriter } = req;
   try {
     const webSocket = await acceptWebSocket({
       conn,
       headers,
-      bufReader: req.r,
-      bufWriter: req.w,
+      bufReader,
+      bufWriter,
     });
     webSockets.set(websocketId, webSocket);
     console.log("ws:New, total", webSockets.size);

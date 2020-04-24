@@ -12,6 +12,7 @@ const log = (msg, type = 'RECEIVED') => {
   textarea.innerHTML += `${new Date().toISOString()} - ${type} : ${msg}\n`;
   textarea.scrollTop = textarea.scrollHeight;
 };
+const onUserAction = () => (document.getElementById('player').style.border = 0); // autoplay will work
 
 /*
  * Websocket
@@ -22,8 +23,7 @@ const wsConnect = (url = defaultUrl) => {
     log('WS CONNECTED', 'INFO');
     socket.send(`New client! Type "${cmdYT}dQw4w9WgXcQ"`);
   };
-  socket.onmessage = (event) => {
-    const msg = event.data;
+  socket.onmessage = ({ data: msg }) => {
     log(msg);
     if (msg && msg.startsWith(cmdYT)) {
       const videoId = msg.substring(cmdYT.length).trim();
@@ -45,6 +45,7 @@ const send = (event) => {
   socket.send(input.value);
   log(input.value, 'SENT');
   input.value = '';
+  onUserAction();
 };
 
 /*
@@ -62,12 +63,12 @@ function onYouTubeIframeAPIReady() {
     width: '640',
     videoId: 'eePl-I8heFc',
     events: {
-      onStateChange: (event) => {
-        if (event.data === YT.PlayerState.PLAYING) {
-          const videoTitle = event.target?.getVideoData()?.title;
-          if (videoTitle) document.title = `${originalTitle} - ${videoTitle}`;
-          else document.title = originalTitle;
-        } else if (event.data === YT.PlayerState.ENDED) event.target.playVideo(); // Dirty loop...
+      onStateChange: ({ data, target }) => {
+        if (data === YT.PlayerState.PLAYING) {
+          const videoTitle = target?.getVideoData()?.title;
+          document.title = videoTitle || originalTitle;
+          onUserAction();
+        } else if (data === YT.PlayerState.ENDED) target.playVideo(); // Dirty loop...
       },
     },
   });

@@ -23,3 +23,8 @@ textarea {
   height: 10em;
   font-style: italic;
 }
+
+#player {
+  border: 1px solid crimson;
+  border-radius: 2px;
+}
