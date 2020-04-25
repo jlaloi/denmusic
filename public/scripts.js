@@ -4,12 +4,11 @@ const defaultUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${locatio
 }/ws`;
 const originalTitle = document.title;
 
-let youTubePlayer;
-let socket;
+let socket, youTubePlayer;
 
 const log = (msg, type = 'RECEIVED') => {
   const textarea = document.getElementById('logs');
-  textarea.innerHTML += `${new Date().toISOString()} - ${type} : ${msg}\n`;
+  textarea.innerHTML += `${new Date().toLocaleTimeString()} - ${type} : ${msg}\n`;
   textarea.scrollTop = textarea.scrollHeight;
 };
 const onUserAction = () => (document.getElementById('player').style.border = 0); // autoplay will work
@@ -26,7 +25,7 @@ const wsConnect = (url = defaultUrl) => {
   socket.onmessage = ({ data: msg }) => {
     log(msg);
     if (msg && msg.startsWith(cmdYT)) {
-      const videoId = msg.substring(cmdYT.length).trim();
+      const videoId = msg.substring(cmdYT.length);
       youTubePlayer.loadVideoById(videoId);
     }
   };
@@ -35,7 +34,7 @@ const wsConnect = (url = defaultUrl) => {
 };
 let errorTimeout;
 const wsReconnectOnError = (error, delay = 5000) => {
-  log(`Attempting to reconnect in ${delay / 1000}s...`, 'ERROR');
+  log(`${error}\nAttempting to reconnect in ${delay / 1000}s...`, 'ERROR');
   if (errorTimeout) clearTimeout(errorTimeout); // Cancel previous
   errorTimeout = setTimeout(wsConnect, delay);
 };

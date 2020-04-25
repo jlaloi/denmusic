@@ -5,7 +5,7 @@
   "license": "MIT",
   "author:": "julien.laloi@gmail.com",
   "scripts": {
-    "start": "deno run --importmap=import_map.json --allow-net --allow-read index.ts",
+    "start": "deno run --importmap=import_map.json --allow-net --allow-read --allow-write index.ts",
     "expose": "ngrok http -host-header=rewrite 9090"
   }
 }
