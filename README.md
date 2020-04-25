@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/jlaloi/denomusic/master/public/favicon.png)
+![](https://raw.githubusercontent.com/jlaloi/denmusic/master/public/favicon.png)
 
 # Denmusic
 
@@ -9,9 +9,11 @@
 ### Start service
 
 ```
-deno run --importmap=import_map.json --allow-net --allow-read index.ts
-``` 
+deno run --importmap=import_map.json --allow-net --allow-read --allow-write index.ts
+```
+
 or
+
 ```
 yarn start
 ```
@@ -20,10 +22,24 @@ yarn start
 
 ```
 ngrok http -host-header=rewrite 9090
-``` 
+```
+
 or
+
 ```
 yarn expose
+```
+
+### Watch
+
+```
+denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts index.ts
+```
+
+or
+
+```
+yarn watch
 ```
 
 ### To play video

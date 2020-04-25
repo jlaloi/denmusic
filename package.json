@@ -1,12 +1,16 @@
 {
-  "name": "denomusic",
+  "name": "denmusic",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "mod.ts",
   "license": "MIT",
   "author:": "julien.laloi@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jlaloi/denmusic.git"
+  },
   "scripts": {
     "start": "deno run --importmap=import_map.json --allow-net --allow-read --allow-write index.ts",
-    "dev": "denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts index.ts",
+    "watch": "denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts index.ts",
     "expose": "ngrok http -host-header=rewrite 9090"
   }
 }
