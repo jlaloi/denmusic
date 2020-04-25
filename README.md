@@ -4,7 +4,7 @@
 
 Synchronize video between clients
 
-## Running with [Deno](https://deno.land):
+## Running with [Deno](https://deno.land)
 
 1. Start service:
 
