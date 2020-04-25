@@ -2,50 +2,50 @@
 
 # Denmusic
 
-## Synchronize video between clients
+Synchronize video between clients
 
-### Running with [Deno](https://deno.land)
+## Running with [Deno](https://deno.land):
 
-### Start service
+1. Start service:
 
-```
-deno run --importmap=import_map.json --allow-net --allow-read --allow-write index.ts
-```
+   ```
+   deno run --importmap=import_map.json --allow-net --allow-read --allow-write index.ts
+   ```
 
-or
+   or
 
-```
-yarn start
-```
+   ```
+   yarn start
+   ```
 
-### Expose with [ngrok](https://ngrok.com/)
+2. Expose with [ngrok](https://ngrok.com/):
 
-```
-ngrok http -host-header=rewrite 9090
-```
+   ```
+   ngrok http -host-header=rewrite 9090
+   ```
 
-or
+   or
 
-```
-yarn expose
-```
+   ```
+   yarn expose
+   ```
 
-### To play video
+## Play video
 
-Type : `!yt <videoId>`
+Type: `!yt <videoId>`
 
-### Dev
+## Dev
 
-Watch with [denon](https://deno.land/x/denon/)
+1.  VSCode extension [axetroy.vscode-deno](https://marketplace.visualstudio.com/items?itemName=axetroy.vscode-deno)
 
-```
-denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts index.ts
-```
+2.  Watch with [denon](https://deno.land/x/denon/):
 
-or
+    ```
+    denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts index.ts
+    ```
 
-```
-yarn watch
-```
+    or
 
- VSCode extension [deno](https://marketplace.visualstudio.com/items?itemName=axetroy.vscode-deno)
+    ```
+    yarn watch
+    ```
