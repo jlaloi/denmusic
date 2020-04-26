@@ -15,7 +15,7 @@
         "--allow-net",
         "--allow-read",
         "--allow-write ",
-        "index.ts"
+        "server.ts"
       ],
       "port": 9229
     }

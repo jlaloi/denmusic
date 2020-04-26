@@ -9,7 +9,7 @@ Synchronize video between clients
 1. Start service:
 
    ```
-   deno run --importmap=import_map.json --allow-net --allow-read --allow-write index.ts
+   deno run --importmap=import_map.json --allow-net --allow-read --allow-write server.ts
    ```
 
    or
@@ -41,7 +41,7 @@ Type: `!yt <videoId>`
 2.  Watch with [denon](https://deno.land/x/denon/):
 
     ```
-    denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts index.ts
+    denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts server.ts
     ```
 
     or
