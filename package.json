@@ -9,8 +9,8 @@
     "url": "https://github.com/jlaloi/denmusic.git"
   },
   "scripts": {
-    "start": "deno run --importmap=import_map.json --allow-net --allow-read --allow-write server.ts",
-    "watch": "denon --importmap=import_map.json --allow-net --allow-read --allow-write --allow-run --fullscreen --extensions .ts server.ts",
+    "start": "deno run --importmap=import_map.json --allow-net --allow-read --allow-write --unstable server.ts",
+    "watch": "denon --importmap=import_map.json --allow-net --allow-read --allow-write --unstable --reload --allow-run --fullscreen --extensions .ts --reloadserver.ts",
     "expose": "ngrok http -host-header=rewrite 9090"
   }
 }

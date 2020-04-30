@@ -18,7 +18,12 @@ export const serveFile = async (dir: string, req: ServerRequest) => {
   if (!fileExist) return req.respond({ status: 404 });
   logger.debug(`${req?.conn?.rid}`, "serving", fileName);
   const [body, fileInfo] = await Promise.all(
-    [Deno.open(file, "r"), Deno.stat(file)],
+    [
+      Deno.open(file, {
+        read: true,
+      }),
+      Deno.stat(file),
+    ],
   );
   const headers = new Headers();
   headers.set("content-length", fileInfo.size.toString());
