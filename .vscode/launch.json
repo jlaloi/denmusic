@@ -14,7 +14,7 @@
         "--importmap=./import_map.json",
         "--allow-net",
         "--allow-read",
-        "--allow-write ",
+        "--allow-write",
         "server.ts"
       ],
       "port": 9229
