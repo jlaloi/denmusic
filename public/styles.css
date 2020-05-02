@@ -4,7 +4,8 @@ body {
 }
 body,
 input,
-textarea {
+textarea,
+a {
   background-color: #333;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: plum;
@@ -23,7 +24,13 @@ textarea {
   height: 10em;
   font-style: italic;
 }
-
+a {
+  text-decoration: none;
+  margin: 0.25em;
+}
+a::before {
+  content: '🎵';
+}
 #player {
   border: 1px solid crimson;
   border-radius: 2px;

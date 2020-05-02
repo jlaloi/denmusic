@@ -76,11 +76,64 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
+/*
+ * Clipboard
+ */
+const addVideoLinks = (links) =>
+  links.forEach(({ text, value }) => {
+    const a = document.createElement('a');
+    a.appendChild(document.createTextNode(text));
+    a.title = getYouTubeVideoId(value);
+    a.href = '#';
+    a.onclick = () => {
+      socket.send(value);
+      log(value, `SENT ${text}`);
+    };
+    document.body.appendChild(a);
+  });
+
+const handleClipboardText = (item) => {
+  const parsed = item
+    .replace(/(\r|\n|\t|  )/gm, ' ')
+    .replace(/(  )/gm, ' ')
+    .split(' ')
+    .reduce(
+      ({ last, result }, value) => {
+        if (getYouTubeVideoId(value)) {
+          result.push({
+            text: last,
+            value,
+          });
+          return {
+            last: '',
+            result,
+          };
+        } else
+          return {
+            last: `${last} ${value}`.trim(),
+            result,
+          };
+      },
+      {
+        last: '',
+        result: [],
+      }
+    );
+  if (parsed.result.length > 1) addVideoLinks(parsed.result);
+};
+const handleClipboard = (event) => {
+  if (event.clipboardData == false || !event.clipboardData.items) return;
+  Array.from(event.clipboardData.items)
+    .filter(({ type }) => type === 'text/html' || type === 'text/plain')
+    .forEach((item) => item.getAsString(handleClipboardText));
+};
+
 /**
  * Global init
  */
 const init = () => {
   wsConnect();
   initYt();
+  window.addEventListener('paste', handleClipboard, false);
   document.getElementById('msg').focus();
 };
