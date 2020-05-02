@@ -1,4 +1,3 @@
-const cmdYT = '!yt ';
 const defaultUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.hostname}${
   location.port ? ':' + location.port : ''
 }/ws`;
@@ -8,7 +7,7 @@ let socket, youTubePlayer;
 
 const log = (msg, type = 'RECEIVED') => {
   const textarea = document.getElementById('logs');
-  textarea.innerHTML += `${new Date().toLocaleTimeString()} - ${type} : ${msg}\n`;
+  textarea.textContent += `${new Date().toLocaleTimeString()} - ${type} : ${msg}\n`;
   textarea.scrollTop = textarea.scrollHeight;
 };
 const onUserAction = () => (document.getElementById('player').style.border = 0); // autoplay will work
@@ -20,14 +19,12 @@ const wsConnect = (url = defaultUrl) => {
   socket = new WebSocket(url);
   socket.onopen = () => {
     log('WS CONNECTED', 'INFO');
-    socket.send(`New client! Type "${cmdYT}dQw4w9WgXcQ"`);
+    socket.send(`New client!`);
   };
   socket.onmessage = ({ data: msg }) => {
     log(msg);
-    if (msg && msg.startsWith(cmdYT)) {
-      const videoId = msg.substring(cmdYT.length);
-      youTubePlayer.loadVideoById(videoId);
-    }
+    const videoId = getYouTubeVideoId(msg);
+    if (videoId) youTubePlayer.loadVideoById(videoId);
   };
   socket.onclose = ({ code }) => wsReconnectOnError(`WS CLOSED : ${code}`);
   socket.onerror = () => wsReconnectOnError('error');
@@ -55,6 +52,12 @@ const initYt = () => {
   tag.src = 'https://www.youtube.com/iframe_api';
   const firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+};
+const getYouTubeVideoId = (url) => {
+  const regex = /(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/;
+  if (!regex.test(url)) return null;
+  const parsed = url.split(regex);
+  return parsed[2] !== undefined ? parsed[2].split(/[^0-9a-z_\-]/i)[0] : parsed[0];
 };
 function onYouTubeIframeAPIReady() {
   youTubePlayer = new YT.Player('player', {
