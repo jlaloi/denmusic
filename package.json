@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "deno run --importmap=import_map.json --allow-net --allow-read --allow-write --unstable server.ts",
-    "watch": "denon --importmap=import_map.json --allow-net --allow-read --allow-write --unstable --reload --allow-run --fullscreen --extensions .ts --reloadserver.ts",
+    "watch": "denon --importmap=import_map.json --allow-net --allow-read --allow-write --unstable --reload --allow-run --fullscreen --extensions .ts server.ts",
     "expose": "ngrok http -host-header=rewrite 9090"
   }
 }

@@ -2,6 +2,7 @@ import { ServerRequest } from "http/server.ts";
 import {
   acceptWebSocket,
   isWebSocketCloseEvent,
+  isWebSocketPingEvent,
   WebSocket,
 } from "ws/mod.ts";
 import { v4 as uuid } from "uuid/mod.ts";
@@ -20,44 +21,33 @@ export const serveWebsocket = async (req: ServerRequest) => {
       bufWriter,
     });
     webSockets.set(websocketId, webSocket);
-    logger.info(
-      `${req?.conn?.rid}`,
-      "ws:New",
-      websocketId,
-      `total: ${webSockets.size}`,
-    );
-    const it = webSocket.receive();
-    while (true) {
-      try {
-        const { done, value } = await it.next();
-        if (done || isWebSocketCloseEvent(value)) {
+    logger.info("ws:New", websocketId);
+    try {
+      for await (const webSocketEvent of webSocket) {
+        if (isWebSocketCloseEvent(webSocketEvent)) {
           webSockets.delete(websocketId);
-          logger.info(
-            `${req?.conn?.rid}`,
-            "ws:Closed",
-            websocketId,
-            `total: ${webSockets.size}`,
-          );
+          logger.info("ws:Close", websocketId);
           break;
-        } else if (typeof value === "string") {
-          logger.debug(`${req?.conn?.rid}`, "ws:msg", value);
+        } else if (typeof webSocketEvent === "string") {
+          logger.debug("ws:msg", websocketId, webSocketEvent);
           // Broadcast to all
           await Promise.all(
             Array.from(webSockets.values()).map((webSocket: WebSocket) =>
-              webSocket.send(value)
+              webSocket.send(webSocketEvent)
             ),
           );
+        } else if (isWebSocketPingEvent(webSocketEvent)) {
+          logger.debug("ws:ping", websocketId);
         }
-      } catch (e) {
-        await webSocket.close(1000).catch(logger.error);
-        throw e;
       }
+    } catch (e) {
+      if (!webSocket.isClosed) await webSocket.close(1000).catch(logger.error);
+      throw e;
     }
   } catch (err) {
     webSockets.delete(websocketId);
     logger.error(
-      `${req?.conn?.rid}`,
-      `websocket error: ${err}`,
+      `${req?.conn?.rid}, ws:error: ${err}`,
       websocketId,
       `total: ${webSockets.size}`,
     );

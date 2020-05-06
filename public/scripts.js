@@ -91,7 +91,6 @@ const addVideoLinks = (links) =>
     };
     document.body.appendChild(a);
   });
-
 const handleClipboardText = (item) => {
   const parsed = item
     .replace(/(\r|\n|\t|  )/gm, ' ')
