@@ -32,7 +32,7 @@ Synchronize video between clients
 
 ## Play video
 
-Type: `!yt <videoId>`
+Type: `any yt video link`
 
 ## Dev
 
