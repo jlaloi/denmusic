@@ -1,13 +1,12 @@
 {
   "deno.enable": true,
   "deno.import_map": "./import_map.json",
+  "deno.unstable": true,
   "[typescript]": {
     "editor.defaultFormatter": "axetroy.vscode-deno"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "axetroy.vscode-deno"
   },
-  "cSpell.words": [
-    "deno"
-  ]
+  "cSpell.words": ["deno"]
 }
