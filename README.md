@@ -9,7 +9,7 @@ Synchronize video between clients
 1. Start service:
 
    ```
-   deno run --unstable --importmap=import_map.json --allow-net --allow-read --allow-write server.ts
+   deno run --unstable --importmap=import_map.json --allow-net --allow-read --allow-write app/server.ts
    ```
 
    or

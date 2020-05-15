@@ -1,8 +1,8 @@
 {
-  "files": ["server.ts"],
+  "files": ["app/server.ts"],
   "fullscreen": true,
   "extensions": [".ts"],
-  "watch": ["app/", "server.ts"],
+  "watch": ["app/"],
   "deno_args": ["--unstable", "--importmap=import_map.json", "--allow-net", "--allow-read", "--allow-write"],
   "execute": {
     ".ts": ["deno", "run"]

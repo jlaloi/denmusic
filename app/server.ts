@@ -1,7 +1,7 @@
 import { serve } from "http/server.ts";
-import { logger, logAccess } from "./app/logger.ts";
-import { serveFile } from "./app/serve.ts";
-import { serveWebsocket } from "./app/websocket.ts";
+import { logger, logAccess } from "./logger.ts";
+import { serveFile } from "./serve.ts";
+import { serveWebsocket } from "./websocket.ts";
 
 const port = Deno.args[0] || "9090";
 const dirPublic = Deno.args[1] || "./public/";
