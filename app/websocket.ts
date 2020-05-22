@@ -21,23 +21,29 @@ export const serveWebsocket = async (req: ServerRequest) => {
       bufWriter,
     });
     webSockets.set(websocketId, webSocket);
-    logger.info("ws:New", websocketId);
+    logger.debug("ws:New", websocketId);
     try {
       for await (const webSocketEvent of webSocket) {
-        if (isWebSocketCloseEvent(webSocketEvent)) {
+        if (webSocket.isClosed || isWebSocketCloseEvent(webSocketEvent)) {
           webSockets.delete(websocketId);
-          logger.info("ws:Close", websocketId);
+          logger.debug("ws:Close", websocketId);
           break;
-        } else if (typeof webSocketEvent === "string") {
+        }
+        // fix ngrok instability To be improved
+        for (const [wsID, { isClosed }] of webSockets.entries()) {
+          if (isClosed) {
+            webSockets.delete(wsID);
+            logger.error("ws:uncaught closure", wsID);
+          }
+        }
+        // Broadcast to all
+        if (typeof webSocketEvent === "string") {
           logger.debug("ws:msg", websocketId, webSocketEvent);
-          // Broadcast to all
           await Promise.all(
             Array.from(webSockets.values()).map((webSocket: WebSocket) =>
               webSocket.send(webSocketEvent)
             ),
           );
-        } else if (isWebSocketPingEvent(webSocketEvent)) {
-          logger.debug("ws:ping", websocketId);
         }
       }
     } catch (e) {
