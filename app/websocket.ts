@@ -1,18 +1,13 @@
 import { ServerRequest } from "http/server.ts";
-import {
-  acceptWebSocket,
-  isWebSocketCloseEvent,
-  isWebSocketPingEvent,
-  WebSocket,
-} from "ws/mod.ts";
+import { acceptWebSocket, isWebSocketCloseEvent, WebSocket } from "ws/mod.ts";
 import { v4 as uuid } from "uuid/mod.ts";
 import { logger } from "./logger.ts";
 
 const webSockets = new Map();
 
 export const serveWebsocket = async (req: ServerRequest) => {
-  const websocketId = uuid.generate();
   const { conn, headers, r:bufReader, w:bufWriter } = req;
+  const websocketId = uuid.generate();
   try {
     const webSocket = await acceptWebSocket({
       conn,
@@ -21,12 +16,12 @@ export const serveWebsocket = async (req: ServerRequest) => {
       bufWriter,
     });
     webSockets.set(websocketId, webSocket);
-    logger.debug("ws:New", websocketId);
+    logger.debug("ws:new", websocketId);
     try {
       for await (const webSocketEvent of webSocket) {
         if (webSocket.isClosed || isWebSocketCloseEvent(webSocketEvent)) {
           webSockets.delete(websocketId);
-          logger.debug("ws:Close", websocketId);
+          logger.debug("ws:close", websocketId);
           break;
         }
         // fix ngrok instability To be improved
@@ -52,10 +47,6 @@ export const serveWebsocket = async (req: ServerRequest) => {
     }
   } catch (err) {
     webSockets.delete(websocketId);
-    logger.error(
-      `${req?.conn?.rid}, ws:error: ${err}`,
-      websocketId,
-      `total: ${webSockets.size}`,
-    );
+    logger.error(`ws:error`, websocketId, err);
   }
 };
