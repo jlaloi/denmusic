@@ -1,10 +1,16 @@
 {
-  "files": ["app/server.ts"],
-  "fullscreen": true,
-  "extensions": [".ts"],
-  "watch": ["app/"],
-  "deno_args": ["--unstable", "--importmap=import_map.json", "--allow-net", "--allow-read", "--allow-write"],
-  "execute": {
-    ".ts": ["deno", "run"]
+  "$schema": "https://deno.land/x/denon/schema.json",
+  "allow": ["net", "read", "write"],
+  "importmap": "import_map.json",
+  "logger": {
+    "fullscreen": true
+  },
+  "scripts": {
+    "start": "app/server.ts"
+  },
+  "unstable": true,
+  "watcher": {
+    "exts": ["ts"],
+    "match": ["app/*.*"]
   }
 }

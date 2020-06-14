@@ -32,7 +32,7 @@ export const logAccess = (req: ServerRequest) => {
   loggerAccess.info(
     `${req?.conn?.rid}`,
     req.url,
-    (req.conn?.remoteAddr as any)?.hostname,
+    (req.conn?.remoteAddr as Deno.NetAddr)?.hostname,
     req.headers.get("x-forwarded-for"),
     req.headers.get("origin"),
     req.headers.get("user-agent"),
