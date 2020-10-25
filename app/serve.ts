@@ -7,6 +7,7 @@ const CONTENT_TYPES: Record<string, string> = {
   ".css": "text/css",
   ".html": "text/html",
   ".js": "application/javascript",
+  ".mp3": "audio/mpeg",
   ".png": "image/png",
   ".svg": "image/svg+xml",
 };
@@ -33,5 +34,8 @@ export const serveFile = async (dir: string, req: ServerRequest) => {
       headers,
       body,
     },
-  );
+  ).catch((err) => {
+    // On large file handle ConnectionAborted/reset
+    logger.error(`${req?.conn?.rid}`, "serving error", fileName, err);
+  });
 };

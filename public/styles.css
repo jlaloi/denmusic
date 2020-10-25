@@ -7,7 +7,7 @@ input,
 textarea,
 a {
   background-color: #333;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: plum;
 }
 input,
@@ -29,9 +29,15 @@ a {
   margin: 0.25em;
 }
 a::before {
-  content: '🎵';
+  content: "🎵";
 }
 #player {
   border: 1px solid crimson;
   border-radius: 2px;
+}
+audio {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 640px;
 }
