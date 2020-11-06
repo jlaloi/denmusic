@@ -12,6 +12,8 @@ const log = (msg, type = "RECEIVED") => {
 };
 const onUserAction = () => (document.getElementById("player").style.border = 0); // autoplay will work
 
+const isMusic = (m) => m?.toLowerCase().endsWith(".mp3");
+
 /*
  * Websocket
  */
@@ -19,7 +21,7 @@ const wsConnect = (url = defaultUrl) => {
   socket = new WebSocket(url);
   socket.onopen = () => {
     log("WS CONNECTED", "INFO");
-    // socket.send(`New client!`);
+    socket.send(`New client!`);
   };
   socket.onmessage = ({ data: msg }) => {
     log(msg);
@@ -27,7 +29,7 @@ const wsConnect = (url = defaultUrl) => {
     if (videoId) {
       audioPlayer.pause();
       youTubePlayer.loadVideoById(videoId);
-    } else if (msg?.toLowerCase().endsWith(".mp3")) {
+    } else if (isMusic(msg)) {
       audioPlayer.src = msg;
       document.title = msg;
       if (youTubePlayer?.stopVideo) youTubePlayer.stopVideo();
@@ -93,7 +95,7 @@ const addVideoLinks = (links) =>
   links.forEach(({ text, value }) => {
     const a = document.createElement("a");
     a.appendChild(document.createTextNode(text));
-    a.title = getYouTubeVideoId(value);
+    a.title = getYouTubeVideoId(value) || value;
     a.href = "#";
     a.onclick = () => {
       socket.send(value);
@@ -108,7 +110,7 @@ const handleClipboardText = (item) => {
     .split(" ")
     .reduce(
       ({ last, result }, value) => {
-        if (getYouTubeVideoId(value)) {
+        if (getYouTubeVideoId(value) || isMusic(value)) {
           result.push({
             text: last,
             value,
